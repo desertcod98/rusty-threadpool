@@ -51,7 +51,7 @@ impl ThreadPool {
         self.threads.len()
     }
 }
-
+test
 impl Drop for ThreadPool {
     fn drop(&mut self) {
         self.sender.take().unwrap();
