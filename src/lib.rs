@@ -46,6 +46,10 @@ impl ThreadPool {
         let task = Box::new(f);
         self.sender.as_ref().unwrap().send(task).unwrap();
     }
+
+    pub fn thread_count(&self) -> usize {
+        self.threads.len()
+    }
 }
 
 impl Drop for ThreadPool {
@@ -55,5 +59,14 @@ impl Drop for ThreadPool {
         for thread in &mut self.threads {
             thread.take().unwrap().join().unwrap();
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        let threadpool = crate::ThreadPool::new(10);
+        assert_eq!(threadpool.thread_count(), 10);
     }
 }
