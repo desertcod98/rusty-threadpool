@@ -14,14 +14,14 @@ impl ThreadPool {
     pub fn new(n_threads: usize) -> Self {
         let mut threads = Vec::with_capacity(n_threads);
 
-        let (sender, reciever) = mpsc::channel::<Task>();
+        let (sender, receiver) = mpsc::channel::<Task>();
 
-        let reciever = Arc::new(Mutex::new(reciever));
+        let receiver = Arc::new(Mutex::new(receiver));
 
         for _ in 0..n_threads {
-            let reciever = Arc::clone(&reciever);
+            let receiver = Arc::clone(&receiver);
             let thread = thread::spawn(move || loop {
-                let guard = reciever.lock().unwrap();
+                let guard = receiver.lock().unwrap();
                 match guard.recv() {
                     Ok(task) => {
                         std::mem::drop(guard); //unlocks resource for other threads
